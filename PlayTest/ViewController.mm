@@ -9,18 +9,22 @@
 #import "ViewController.h"
 #import "VideoDecoder.h"
 #import "airplay_mirror.h"
+#import "AudioBufferPlayer.h"
 
 @interface ViewController ()
 
 @property (weak) IBOutlet PlayerView* playerView;
 @property (strong) VideoDecoder* videoDecoder;
+@property (strong) AudioBufferPlayer* audioBufferPlayer;
+@property (strong) NSMutableArray<NSData*>* bufferQueue;
 
 - (void)displayFrame:(CVPixelBufferRef)pixelBuffer;
-
+- (NSData*)getPCM;
+- (void)addPCM:(NSData*)data;
 @end
 
 
-void airplay_data_receive(unsigned char* buffer, long buflen, int payload,void* ref){
+void video_data_receive(unsigned char* buffer, long buflen, int payload,void* ref){
     
     @autoreleasepool{
         ViewController* vc = (__bridge ViewController*)ref;
@@ -51,8 +55,33 @@ void airplay_data_receive(unsigned char* buffer, long buflen, int payload,void* 
     }
 }
 
+void audio_data_receive(unsigned char* buffer, long buflen, void* ref){
+    @autoreleasepool{
+        ViewController* vc = (__bridge ViewController*)ref;
+        if (vc.audioBufferPlayer == nil){
+            __weak typeof(vc) weakVC = vc;
+            vc.audioBufferPlayer = [[AudioBufferPlayer alloc] initWithSampleRate:44100 channels:2 bitsPerChannel:16 packetsPerBuffer:480];
+            vc.audioBufferPlayer.block = ^(AudioQueueBufferRef buffer, AudioStreamBasicDescription audioFormat) {
+                
+                NSData* data = [weakVC getPCM];
+                if (data){
+                    memcpy(buffer->mAudioData, data.bytes, data.length);
+                    buffer->mAudioDataByteSize = (uint32_t) data.length;
+                }else{
+                    memset(buffer->mAudioData,0,buffer->mAudioDataBytesCapacity);
+                    buffer->mAudioDataByteSize = buffer->mAudioDataBytesCapacity;
+                }
+            };
+            
+            [vc.audioBufferPlayer start];
+        }
+        
+        [vc addPCM:[NSData dataWithBytes:buffer length:buflen]];
+    }
+}
 
 @implementation ViewController
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -66,24 +95,45 @@ void airplay_data_receive(unsigned char* buffer, long buflen, int payload,void* 
     // Update the view, if already loaded.
 }
 
+- (NSData*)getPCM{
+    NSData* data = nil;
+    
+    @synchronized (_bufferQueue){
+        if (_bufferQueue.count){
+            data = _bufferQueue.firstObject;
+            [_bufferQueue removeObjectAtIndex:0];
+        }
+    }
+    
+    return data;
+}
+
+- (void)addPCM:(NSData*)data{
+    @synchronized (_bufferQueue){
+        [_bufferQueue addObject:data];
+    }
+}
+
 - (IBAction)startOrStop:(id)sender{
     NSButton* button = (NSButton*)sender;
     if (button.tag == 0){
         button.tag = 1;
         [button setTitle:@"Stop"];
         mirror_context context;
-        context.video_data_receive = airplay_data_receive;
-        context.audio_data_receive = 0;
+        context.video_data_receive = video_data_receive;
+        context.audio_data_receive = audio_data_receive;
         context.airplay_did_stop = 0;
         strcpy(context.name, "AirPlay");
         context.width = 1280;
         context.height = 720;
         context.ref = (__bridge void*)self;
         
+        _bufferQueue = [NSMutableArray arrayWithCapacity:10];
         start_mirror(&context);
     }else{
         button.tag = 0;
         [button setTitle:@"Start"];
+        [_audioBufferPlayer stop];
         stop_mirror();
     }
 }

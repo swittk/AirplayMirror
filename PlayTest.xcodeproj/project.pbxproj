@@ -14,6 +14,7 @@
 		470A2C761FF6215000A77316 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 470A2C751FF6215000A77316 /* main.m */; };
 		471C7086200715A4008116B7 /* PlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 471C7085200715A4008116B7 /* PlayerView.m */; };
 		471C717520075796008116B7 /* VideoDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 471C717420075796008116B7 /* VideoDecoder.m */; };
+		471D04482047AA9700047B30 /* AudioBufferPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 471D04472047AA9700047B30 /* AudioBufferPlayer.m */; };
 		47F6898B200F258B00EEBAD0 /* libairplaymirror.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 47F6898A200F258B00EEBAD0 /* libairplaymirror.a */; };
 /* End PBXBuildFile section */
 
@@ -32,6 +33,8 @@
 		471C7085200715A4008116B7 /* PlayerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlayerView.m; sourceTree = "<group>"; };
 		471C717320075796008116B7 /* VideoDecoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoDecoder.h; sourceTree = "<group>"; };
 		471C717420075796008116B7 /* VideoDecoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoDecoder.m; sourceTree = "<group>"; };
+		471D04462047AA9700047B30 /* AudioBufferPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioBufferPlayer.h; sourceTree = "<group>"; };
+		471D04472047AA9700047B30 /* AudioBufferPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioBufferPlayer.m; sourceTree = "<group>"; };
 		47F6898A200F258B00EEBAD0 /* libairplaymirror.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libairplaymirror.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -73,6 +76,8 @@
 				470A2C6D1FF6215000A77316 /* ViewController.mm */,
 				471C717320075796008116B7 /* VideoDecoder.h */,
 				471C717420075796008116B7 /* VideoDecoder.m */,
+				471D04462047AA9700047B30 /* AudioBufferPlayer.h */,
+				471D04472047AA9700047B30 /* AudioBufferPlayer.m */,
 				471C7084200715A4008116B7 /* PlayerView.h */,
 				471C7085200715A4008116B7 /* PlayerView.m */,
 				470A2C6F1FF6215000A77316 /* Assets.xcassets */,
@@ -172,6 +177,7 @@
 				470A2C761FF6215000A77316 /* main.m in Sources */,
 				470A2C6B1FF6215000A77316 /* AppDelegate.m in Sources */,
 				471C7086200715A4008116B7 /* PlayerView.m in Sources */,
+				471D04482047AA9700047B30 /* AudioBufferPlayer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
