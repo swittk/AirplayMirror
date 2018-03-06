@@ -55,7 +55,7 @@ void video_data_receive(unsigned char* buffer, long buflen, int payload,void* re
     }
 }
 
-void audio_data_receive(unsigned char* buffer, long buflen, void* ref){
+void audio_did_start(void* ref){
     @autoreleasepool{
         ViewController* vc = (__bridge ViewController*)ref;
         if (vc.audioBufferPlayer == nil){
@@ -66,7 +66,7 @@ void audio_data_receive(unsigned char* buffer, long buflen, void* ref){
                 NSData* data = [weakVC getPCM];
                 if (data){
                     memcpy(buffer->mAudioData, data.bytes, data.length);
-                    buffer->mAudioDataByteSize = (uint32_t) data.length;
+                    buffer->mAudioDataByteSize = (UInt32)data.length;
                 }else{
                     memset(buffer->mAudioData,0,buffer->mAudioDataBytesCapacity);
                     buffer->mAudioDataByteSize = buffer->mAudioDataBytesCapacity;
@@ -75,7 +75,20 @@ void audio_data_receive(unsigned char* buffer, long buflen, void* ref){
             
             [vc.audioBufferPlayer start];
         }
-        
+    }
+}
+
+void audio_did_stop(void* ref){
+    @autoreleasepool{
+        ViewController* vc = (__bridge ViewController*)ref;
+        [vc.audioBufferPlayer stop];
+        vc.audioBufferPlayer = nil;
+    }
+}
+
+void audio_data_receive(unsigned char* buffer, long buflen, void* ref){
+    @autoreleasepool{
+        ViewController* vc = (__bridge ViewController*)ref;
         [vc addPCM:[NSData dataWithBytes:buffer length:buflen]];
     }
 }
@@ -122,7 +135,9 @@ void audio_data_receive(unsigned char* buffer, long buflen, void* ref){
         mirror_context context;
         context.video_data_receive = video_data_receive;
         context.audio_data_receive = audio_data_receive;
-        context.airplay_did_stop = 0;
+        context.audio_did_start = audio_did_start;
+        context.audio_did_stop = audio_did_stop;
+        context.airplay_did_stop = NULL;
         strcpy(context.name, "AirPlay");
         context.width = 1280;
         context.height = 720;
@@ -133,7 +148,12 @@ void audio_data_receive(unsigned char* buffer, long buflen, void* ref){
     }else{
         button.tag = 0;
         [button setTitle:@"Start"];
-        [_audioBufferPlayer stop];
+        
+        if (_audioBufferPlayer){
+            [_audioBufferPlayer stop];
+            _audioBufferPlayer = nil;
+        }
+        
         stop_mirror();
     }
 }

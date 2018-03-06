@@ -1,6 +1,3 @@
-
-
-
 typedef struct mirror_context{
     char name[256];
     int width;
@@ -8,10 +5,11 @@ typedef struct mirror_context{
     void* ref;
     
     void (*video_data_receive)(unsigned char* buffer, long buflen, int payload,void* ref);
+    void (*airplay_did_stop)(void* ref);
     
     void (*audio_data_receive)(unsigned char* buffer, long buflen,void* ref);
-
-	void(*airplay_did_stop)(void* ref);
+    void (*audio_did_start)(void* ref);
+    void (*audio_did_stop)(void* ref);
 
 }mirror_context;
 
