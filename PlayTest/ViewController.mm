@@ -149,11 +149,6 @@ void audio_data_receive(unsigned char* buffer, long buflen, void* ref){
         button.tag = 0;
         [button setTitle:@"Start"];
         
-        if (_audioBufferPlayer){
-            [_audioBufferPlayer stop];
-            _audioBufferPlayer = nil;
-        }
-        
         stop_mirror();
     }
 }
