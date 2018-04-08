@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14109"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -690,6 +690,21 @@
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="196" y="240" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+                        <toolbar key="toolbar" implicitIdentifier="7E8306F4-E133-4222-8C7B-A63A1DC9447C" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="Boi-SM-vGa">
+                            <allowedToolbarItems>
+                                <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="3nq-LT-HsB"/>
+                                <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="InV-lA-h3e"/>
+                                <toolbarItem implicitItemIdentifier="59C81907-E918-4C86-88B5-B31754AA1ED5" label="Start" paletteLabel="Start" image="NSStatusAvailable" id="Vnx-Hq-ZEH">
+                                    <connections>
+                                        <action selector="startOrStop:" target="Oky-zY-oP4" id="lYn-8C-hoJ"/>
+                                    </connections>
+                                </toolbarItem>
+                            </allowedToolbarItems>
+                            <defaultToolbarItems>
+                                <toolbarItem reference="Vnx-Hq-ZEH"/>
+                                <toolbarItem reference="InV-lA-h3e"/>
+                            </defaultToolbarItems>
+                        </toolbar>
                         <connections>
                             <outlet property="delegate" destination="B8D-0N-5wS" id="98r-iN-zZc"/>
                         </connections>
@@ -711,26 +726,14 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <openGLView useAuxiliaryDepthBufferStencil="NO" allowOffline="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x6S-Xx-CEM" customClass="PlayerView">
-                                <rect key="frame" x="0.0" y="48" width="640" height="352"/>
+                                <rect key="frame" x="0.0" y="0.0" width="640" height="400"/>
                             </openGLView>
-                            <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PnQ-eh-dU9">
-                                <rect key="frame" x="238" y="13" width="109" height="32"/>
-                                <buttonCell key="cell" type="push" title="Start" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cez-7A-Iyy">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="startOrStop:" target="XfG-lQ-9wD" id="K3e-wF-CAW"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <constraints>
                             <constraint firstItem="x6S-Xx-CEM" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="4sk-0W-R7c"/>
-                            <constraint firstItem="PnQ-eh-dU9" firstAttribute="bottom" secondItem="m2S-Jp-Qdl" secondAttribute="bottom" constant="-15" id="AnT-z7-c1t"/>
-                            <constraint firstItem="x6S-Xx-CEM" firstAttribute="bottom" secondItem="m2S-Jp-Qdl" secondAttribute="bottom" constant="-48" id="LPs-zN-nGw"/>
+                            <constraint firstItem="x6S-Xx-CEM" firstAttribute="bottom" secondItem="m2S-Jp-Qdl" secondAttribute="bottom" id="LPs-zN-nGw"/>
                             <constraint firstItem="x6S-Xx-CEM" firstAttribute="trailing" secondItem="m2S-Jp-Qdl" secondAttribute="trailing" id="NE9-30-fzX"/>
                             <constraint firstItem="x6S-Xx-CEM" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="RlI-Tf-kyd"/>
-                            <constraint firstItem="PnQ-eh-dU9" firstAttribute="centerX" secondItem="m2S-Jp-Qdl" secondAttribute="centerX" id="xFN-vh-sSF"/>
                         </constraints>
                     </view>
                     <connections>
@@ -742,4 +745,7 @@
             <point key="canvasLocation" x="155" y="650"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="NSStatusAvailable" width="16" height="16"/>
+    </resources>
 </document>

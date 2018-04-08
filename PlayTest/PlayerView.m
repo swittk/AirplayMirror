@@ -14,7 +14,6 @@
     CVPixelBufferRef _displayBuffer;
     CIContext* _ciContext;
     BOOL _needsReshape;
-    NSRect _bounds;
 }
 
 @end
@@ -24,7 +23,6 @@
 - (void)setFrame:(NSRect)frame{
     [super setFrame:frame];
     _needsReshape = YES;
-    _bounds = [self bounds];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder{
@@ -77,12 +75,12 @@
         
         if (_needsReshape){
             _needsReshape = NO;
-            glViewport(0, 0, _bounds.size.width ,_bounds.size.height);
+            glViewport(0, 0, self.bounds.size.width ,self.bounds.size.height);
             glMatrixMode(GL_MODELVIEW);
             glLoadIdentity();
             glMatrixMode(GL_PROJECTION);
             glLoadIdentity();
-            glOrtho(0, _bounds.size.width, 0, _bounds.size.height, -1.0, 1.0);
+            glOrtho(0, self.bounds.size.width, 0, self.bounds.size.height, -1.0, 1.0);
         }
         
         glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -92,20 +90,20 @@
         size_t height = CVPixelBufferGetHeight(_displayBuffer);
 
         float src = (float)width / (float)height;
-        float dst = _bounds.size.width / _bounds.size.height;
+        float dst = self.bounds.size.width / self.bounds.size.height;
         
         if (src > dst){
-            width = _bounds.size.width;
+            width = self.bounds.size.width;
             height = width / src;
         }else{
-            height = _bounds.size.height;
+            height = self.bounds.size.height;
             width = height*src;
         }
         
         CIImage *inputImage = [CIImage imageWithCVImageBuffer:_displayBuffer];
         
         NSRect imageRect = [inputImage extent];
-        [_ciContext drawImage:inputImage inRect:NSMakeRect((_bounds.size.width - width) / 2, (_bounds.size.height - height) / 2, width, height) fromRect:imageRect];
+        [_ciContext drawImage:inputImage inRect:NSMakeRect((self.bounds.size.width - width) / 2, (self.bounds.size.height - height) / 2, width, height) fromRect:imageRect];
         CVPixelBufferUnlockBaseAddress(_displayBuffer, 0);
     }else{
         glClearColor(0.0, 0.0, 0.0, 0.0);

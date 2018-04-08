@@ -31,29 +31,36 @@ static void outputCallback(void * decompressionOutputRefCon, void * sourceFrameR
 }    
     
 - (void)setupWithSPS:(NSData*)sps pps:(NSData*)pps{
+    
+    CMFormatDescriptionRef formatDescription;
+    const uint8_t* const parameterSetPointers[2] = { (const uint8_t*)[sps bytes], (const uint8_t*)[pps bytes] };
+    const size_t parameterSetSizes[2] = { [sps length], [pps length] };
+    CMVideoFormatDescriptionCreateFromH264ParameterSets(NULL,2,parameterSetPointers,                                                             parameterSetSizes,4,&formatDescription);
+    
+    if (_formatDescription && CMFormatDescriptionEqual(formatDescription, _formatDescription))
+        return;
+    
     [self clean];
+    
+    _formatDescription = formatDescription;
     
     VTDecompressionOutputCallbackRecord outputCallbackRecord;
     outputCallbackRecord.decompressionOutputCallback = outputCallback;
     outputCallbackRecord.decompressionOutputRefCon = (__bridge void *)self;
     
-    const uint8_t* const parameterSetPointers[2] = { (const uint8_t*)[sps bytes], (const uint8_t*)[pps bytes] };
-    const size_t parameterSetSizes[2] = { [sps length], [pps length] };
-    CMVideoFormatDescriptionCreateFromH264ParameterSets(NULL,2,parameterSetPointers,                                                             parameterSetSizes,4,&_formatDescription);
-    
-//    CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(_formatDescription);
+    //    CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(_formatDescription);
     
     NSDictionary* destinationPixelBufferAttributes = @{
-                    (__bridge NSString*)kCVPixelBufferPixelFormatTypeKey : @(kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange),
-                    (__bridge NSString*)kCVPixelBufferOpenGLCompatibilityKey : @(YES),
-                    
-                    (__bridge NSString*)kCVPixelBufferIOSurfacePropertiesKey : [NSDictionary dictionary],
-                    };
+                                                       (__bridge NSString*)kCVPixelBufferPixelFormatTypeKey : @(kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange),
+                                                       (__bridge NSString*)kCVPixelBufferOpenGLCompatibilityKey : @(YES),
+                                                       
+                                                       (__bridge NSString*)kCVPixelBufferIOSurfacePropertiesKey : [NSDictionary dictionary],
+                                                       };
     
     OSStatus status = VTDecompressionSessionCreate(kCFAllocatorDefault, _formatDescription, NULL, (__bridge CFDictionaryRef)destinationPixelBufferAttributes, &outputCallbackRecord, &_vt_session);
     
     if (status != noErr) {
-
+        
     }
 }
 
@@ -67,6 +74,7 @@ static void outputCallback(void * decompressionOutputRefCon, void * sourceFrameR
     
     if (_formatDescription){
         CFRelease(_formatDescription);
+        _formatDescription = nil;
     }
 }
 

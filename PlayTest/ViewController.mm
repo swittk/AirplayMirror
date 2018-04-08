@@ -128,10 +128,11 @@ void audio_data_receive(unsigned char* buffer, long buflen, void* ref){
 }
 
 - (IBAction)startOrStop:(id)sender{
-    NSButton* button = (NSButton*)sender;
-    if (button.tag == 0){
-        button.tag = 1;
-        [button setTitle:@"Stop"];
+    NSToolbarItem* item = (NSToolbarItem*)sender;
+    if (item.tag == 0){
+        item.tag = 1;
+        [item setLabel:@"Stop"];
+        [item setImage:[NSImage imageNamed:@"NSStatusUnavailable"]];
         mirror_context context;
         context.video_data_receive = video_data_receive;
         context.audio_data_receive = audio_data_receive;
@@ -146,8 +147,9 @@ void audio_data_receive(unsigned char* buffer, long buflen, void* ref){
         _bufferQueue = [NSMutableArray arrayWithCapacity:10];
         start_mirror(&context);
     }else{
-        button.tag = 0;
-        [button setTitle:@"Start"];
+        item.tag = 0;
+        [item setLabel:@"Start"];
+        [item setImage:[NSImage imageNamed:@"NSStatusAvailable"]];
         
         stop_mirror();
     }
