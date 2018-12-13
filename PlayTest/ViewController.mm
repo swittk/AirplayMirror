@@ -159,3 +159,14 @@ void audio_data_receive(unsigned char* buffer, long buflen, void* ref){
     [_playerView display:pixelBuffer];
 }
 @end
+
+@implementation PlayerWindowController
+- (NSApplicationPresentationOptions)window:(NSWindow *)window willUseFullScreenPresentationOptions:(NSApplicationPresentationOptions)proposedOptions
+{
+    return (NSApplicationPresentationFullScreen |
+            NSApplicationPresentationHideDock |
+            NSApplicationPresentationAutoHideMenuBar |
+            NSApplicationPresentationAutoHideToolbar);
+}
+
+@end
